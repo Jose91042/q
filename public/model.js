@@ -1,0 +1,18 @@
+function stat(team,key){const s=team?.statistics?.find(s=>s.name===key);if(!s)return null;const n=Number(s.value??s.displayValue);return Number.isFinite(n)&&n>=0?n:null;}
+export function normalize(events){
+  return events.filter(e=>e.season?.year===2026).map(e=>{const c=e.competitions?.[0],h=c?.competitors?.find(t=>t.homeAway==='home'),a=c?.competitors?.find(t=>t.homeAway==='away');if(!h||!a)return null;return {id:e.id,date:e.date,home:{id:h.id,name:h.team.displayName,short:h.team.abbreviation,logo:h.team.logo},away:{id:a.id,name:a.team.displayName,short:a.team.abbreviation,logo:a.team.logo},hg:Number(h.score),ag:Number(a.score),hc:stat(h,'wonCorners'),ac:stat(a,'wonCorners'),hst:stat(h,'shotsOnTarget'),ast:stat(a,'shotsOnTarget'),hs:stat(h,'totalShots'),as:stat(a,'totalShots'),done:!!c.status?.type?.completed && c.status?.type?.name==='STATUS_FULL_TIME',state:c.status?.type?.state,status:c.status?.type?.shortDetail,stage:c.notes?.map(n=>n.headline).join(' · ')||'',url:e.links?.find(l=>l.rel?.includes('summary'))?.href||'https://www.espn.com/soccer/scoreboard',venue:c.venue?.fullName||''};}).filter(Boolean).sort((a,b)=>a.date.localeCompare(b.date));
+}
+export function predict(match,history){
+  const past=history.filter(m=>m.done&&m.date<match.date), hs=past.filter(m=>m.home.id===match.home.id||m.away.id===match.home.id),as=past.filter(m=>m.home.id===match.away.id||m.away.id===match.away.id);
+  if(past.length<15||hs.length<3||as.length<3)return null;
+  const avgH=past.reduce((s,m)=>s+m.hg,0)/past.length,avgA=past.reduce((s,m)=>s+m.ag,0)/past.length;
+  function rate(id,side,forGoals,prior){const list=past.filter(m=>m[side].id===id);let sum=0,w=0;list.forEach((m,i)=>{let z=Math.pow(.94,list.length-i-1);sum+=z*(forGoals?(side==='home'?m.hg:m.ag):(side==='home'?m.ag:m.hg));w+=z});return (sum+4*prior)/(w+4);}
+  const lh=Math.max(.15,Math.min(4.5,rate(match.home.id,'home',true,avgH)*rate(match.away.id,'away',false,avgH)/Math.max(.1,avgH))),la=Math.max(.15,Math.min(4.5,rate(match.away.id,'away',true,avgA)*rate(match.home.id,'home',false,avgA)/Math.max(.1,avgA)));
+  function pois(l){let v=[Math.exp(-l)];for(let i=1;i<=20;i++)v.push(v[i-1]*l/i);return v;}
+  const ph=pois(lh),pa=pois(la);let h=0,d=0,a=0,btts=0,over={.5:0,1.5:0,2.5:0,3.5:0,4.5:0},scores=[];
+  ph.forEach((p,i)=>pa.forEach((q,j)=>{let v=p*q;if(i>j)h+=v;else if(i===j)d+=v;else a+=v;if(i&&j)btts+=v;for(const k of Object.keys(over))if(i+j>Number(k))over[k]+=v;scores.push({label:i+'–'+j,p:v});}));
+  scores.sort((a,b)=>b.p-a.p);
+  return {h,d,a,btts,over,scores:scores.slice(0,6),lh,la,nH:hs.length,nA:as.length,homeForm:hs.slice(-5).map(m=>m.hg===m.ag?'E':(m.home.id===match.home.id?m.hg>m.ag:m.ag>m.hg)?'V':'D'),awayForm:as.slice(-5).map(m=>m.hg===m.ag?'E':(m.home.id===match.away.id?m.hg>m.ag:m.ag>m.hg)?'V':'D')};
+}
+export function backtest(history){let n=0,hit=0,brier=0,baseBrier=0,baseHit=0,bt=0,ov=0;for(const m of history){if(!m.done)continue;const p=predict(m,history);if(!p)continue;const v=[p.h,p.d,p.a],y=m.hg>m.ag?0:m.hg===m.ag?1:2;n++;if(v.indexOf(Math.max(...v))===y)hit++;if(y===0)baseHit++;bt+=Number((p.btts>=.5)===(m.hg>0&&m.ag>0));ov+=Number((p.over[2.5]>=.5)===(m.hg+m.ag>2.5));v.forEach((v,i)=>{brier+=(v-Number(i===y))**2;baseBrier+=(1/3-Number(i===y))**2;});}return {n,hit,brier:n?brier/n:null,baseBrier:n?baseBrier/n:null,baseHit,bt,ov};}
+export function markets(p,type){if(!p)return [];switch(type){case '1x2':return [['1',p.h],['X',p.d],['2',p.a]];case 'btts':return [['Sí',p.btts],['No',1-p.btts]];case 'double':return [['1X',p.h+p.d],['12',p.h+p.a],['X2',p.d+p.a]];case 'goals':return [['Más 2,5',p.over[2.5]],['Menos 2,5',1-p.over[2.5]]];default:return [];}}
