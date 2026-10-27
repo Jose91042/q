@@ -23,3 +23,4 @@
  aside{border-radius:22px;padding:24px;position:static}.content-card{border-radius:19px;padding:20px}.content-card p{font-size:13px}.detail-grid{gap:8px}dialog{border-radius:24px;padding:25px 20px}dialog h2{font-size:24px}.metric-grid{gap:7px}.metric-grid>div{padding:13px}.metric-grid strong{font-size:24px}.source-note{font-size:10px}footer{margin-top:25px;padding-bottom:12px}footer>span:last-child{display:none}
 }
 @media(prefers-reduced-motion:no-preference){button,a{transition:background .16s ease,color .16s ease,box-shadow .16s ease}.match{animation:card-arrive .28s ease-out}@keyframes card-arrive{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}}
+@media(max-width:700px){.match .prob-wrap{grid-column:1/-1;grid-row:2}.match .probabilities{margin-top:0}}
