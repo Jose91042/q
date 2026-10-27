@@ -1,6 +1,6 @@
 # Tu aplicación independiente
 
-Esta copia contiene el código de Quiniela Lab y un servidor con contraseña propia. No necesita ChatGPT para abrirse ni para funcionar. No se ha contratado un alojamiento ni un dominio; la web anterior continúa publicada sin cambios.
+Esta copia contiene el código de Quiniela Lab y un servidor con contraseña propia. No necesita ChatGPT para abrirse ni para funcionar. La aplicación está alojada en la cuenta del propietario en Render; este paquete también permite trasladarla a otro alojamiento compatible.
 
 ## Qué incluye
 
@@ -10,6 +10,10 @@ Esta copia contiene el código de Quiniela Lab y un servidor con contraseña pro
 - Bloqueo temporal tras 5 contraseñas incorrectas en 15 minutos por dirección de conexión. Está pensado para una sola instancia. Para varias instancias se necesita un limitador de intentos compartido.
 - Los archivos y las estadísticas incluidas están protegidos por el servidor. No coloques `public/` en un alojamiento estático por separado: omitiría la protección.
 - La quiniela se guarda por navegador; no se sincroniza entre dispositivos.
+- El historial utiliza IndexedDB. Guarda automáticamente los primeros pronósticos de los próximos 14 días con fuente consultada y registra tus elecciones por separado. Los porcentajes originales permanecen fijos. Revisa resultados cuando se abre o actualiza la app, no con el navegador cerrado. Exporta CSV para conservar una copia.
+- Fiabilidad evalúa una competición, modelo y línea a la vez: bandas de probabilidad, cumplimiento observado, intervalos, Brier y ECE. Solo usa registros automáticos previos al inicio; no inventa un historial previo ni mezcla jugadores experimentales o elecciones duplicadas. No reajusta los porcentajes con la misma muestra evaluada.
+- Cada análisis desglosa producción propia, concesiones del rival, localía, tamaño de muestra y datos ausentes.
+- Manifest, iconos y botón de instalación en dispositivos compatibles. En iPhone/iPad se muestra el procedimiento de añadir a la pantalla de inicio. El trabajador de servicio solo guarda un aviso público sin conexión; no cachea páginas privadas, scripts protegidos, datos o contraseñas.
 
 ## Publicarla en una cuenta tuya
 
