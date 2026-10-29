@@ -24,3 +24,5 @@
 }
 @media(prefers-reduced-motion:no-preference){button,a{transition:background .16s ease,color .16s ease,box-shadow .16s ease}.match{animation:card-arrive .28s ease-out}@keyframes card-arrive{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}}
 @media(max-width:700px){.match .prob-wrap{grid-column:1/-1;grid-row:2}.match .probabilities{margin-top:0}}
+
+.line-results{grid-template-columns:repeat(auto-fit,minmax(140px,1fr))}.player-card small{line-height:1.7}#player-choice{max-width:100%;width:100%;padding:12px;background:#fff;border:1px solid var(--line);border-radius:10px;margin:10px 0}
