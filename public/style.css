@@ -26,3 +26,5 @@
 @media(max-width:700px){.match .prob-wrap{grid-column:1/-1;grid-row:2}.match .probabilities{margin-top:0}}
 
 .line-results{grid-template-columns:repeat(auto-fit,minmax(140px,1fr))}.player-card small{line-height:1.7}#player-choice{max-width:100%;width:100%;padding:12px;background:#fff;border:1px solid var(--line);border-radius:10px;margin:10px 0}
+
+#market-settings summary{cursor:pointer;font-weight:700}#market-settings fieldset{border:1px solid var(--line);border-radius:10px;margin:12px 0;padding:12px}#market-settings label{display:inline-flex;align-items:center;gap:6px;margin:8px}.favorite-button{background:none;border:0;color:#597428;font-size:22px;padding:6px}.favorites-filter{display:flex;align-items:center;gap:8px;margin:14px 0;color:var(--green)}#sync-panel button{margin-right:8px}#sync-panel p{line-height:1.7}
