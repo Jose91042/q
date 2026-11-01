@@ -30,3 +30,5 @@
 #market-settings summary{cursor:pointer;font-weight:700}#market-settings fieldset{border:1px solid var(--line);border-radius:10px;margin:12px 0;padding:12px}#market-settings label{display:inline-flex;align-items:center;gap:6px;margin:8px}.favorite-button{background:none;border:0;color:#597428;font-size:22px;padding:6px}.favorites-filter{display:flex;align-items:center;gap:8px;margin:14px 0;color:var(--green)}#sync-panel button{margin-right:8px}#sync-panel p{line-height:1.7}
 
 .observed-evidence{padding:13px;background:#f0f4e8;border:1px solid #d9e4ce;border-radius:12px;margin:12px 0}.observed-evidence>b{font-size:14px}.observed-evidence p{line-height:1.7}.signal-card details,.line-option details{font-size:12px;margin:12px 0}.signal-card summary,.line-option summary{cursor:pointer}
+
+.bet-summary{border:1px solid #c6d8ae;background:#f5f8ef}.bet-summary h2{font-size:24px}.summary-option{padding:14px 0;border-bottom:1px solid var(--line)}.summary-option:last-of-type{border-bottom:0}.bet-summary details{margin-top:18px;font-size:12px}.bet-summary summary{cursor:pointer;font-weight:650}
